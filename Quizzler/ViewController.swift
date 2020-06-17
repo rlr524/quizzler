@@ -16,11 +16,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var falseButon: UIButton!
     
     let quiz = [
-        "Four + Two is equal to Six",
-        "Five - Three is equal to One",
-        "Three + Eight is less than Ten",
-        "Rila Fukushima is cute",
-        "The Godfather is the greatest film ever made",
+    ["Four + Two is equal to Six", "True"],
+        ["Five - Three is equal to One", "False"],
+        ["Three + Eight is less than Ten", "False"],
+        ["Rila Fukushima is cute", "True"],
+        ["The Godfather is the greatest film ever made", "True"],
     ]
     
     var questionNumber: Int = 0
@@ -31,11 +31,28 @@ class ViewController: UIViewController {
     }
 
     @IBAction func answerButtonPressed(_ sender: UIButton) {
-        questionNumber += 1
+        let userAnswer = sender.currentTitle
+        let actualAnswer = quiz[questionNumber][1]
+        if userAnswer == actualAnswer {
+            print("Right!")
+        } else {
+            print("Wrong!")
+        }
+        
+        if questionNumber < quiz.count - 1 {
+            questionNumber += 1
+        } else {
+            questionNumber = 0
+        }
+        
         updateUI()
     }
     
     func updateUI() {
-        questionText.text = quiz[questionNumber]
+        questionText.text = quiz[questionNumber][0]
     }
+    
+//    func gameOver() {
+//        questionText.text = "Game Over!"
+//    }
 }
