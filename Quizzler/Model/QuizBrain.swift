@@ -1,20 +1,14 @@
 //
-//  ViewController.swift
+//  QuizBrain.swift
 //  Quizzler
 //
-//  Created by Rob Ranf on 6/11/20.
+//  Created by Rob Ranf on 6/26/20.
 //  Copyright © 2020 Rob Ranf. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
-class ViewController: UIViewController {
-
-    @IBOutlet weak var questionText: UILabel!
-    @IBOutlet weak var progressBar: UIProgressView!
-    @IBOutlet weak var trueButton: UIButton!
-    @IBOutlet weak var falseButon: UIButton!
-    
+struct QuizBrain {
     let quiz = [
         Question(q: "Four + Two is equal to Six", a: "True"),
         Question(q: "Five - Three is equal to One", a: "False"),
@@ -38,40 +32,39 @@ class ViewController: UIViewController {
     ]
     
     var questionNumber: Int = 0
+    var score = 0
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        updateUI()
-    }
-
-    @IBAction func answerButtonPressed(_ sender: UIButton) {
-        let userAnswer = sender.currentTitle
-        let actualQuestion = quiz[questionNumber]
-        let actualAnswer = actualQuestion.answer
-        if userAnswer == actualAnswer {
-            sender.backgroundColor = UIColor.green
+    // here we are passing in a blank external param name with _ and userAnswer is the internal
+    // param name; now in the ViewController, we only need to pass the argument when we use
+    // quizBrain.checkAnswer method
+    mutating func checkAnswer(_ userAnswer: String) -> Bool {
+        if userAnswer == quiz[questionNumber].answer {
+            score += 1
+            return true
+        } else {
+            return false
         }
-        else if userAnswer != actualAnswer {
-            sender.backgroundColor = UIColor.red
-         }
-
+    }
+    
+    mutating func getScore() -> Int {
+            return score
+    }
+    
+    func getQuestionText() -> String {
+            return quiz[questionNumber].text
+    }
+    
+    func getProgress() -> Float {
+        let progress = Float(questionNumber + 1) / Float(quiz.count)
+        return progress
+    }
+    
+    mutating func nextQuestion() {
         if questionNumber < quiz.count - 1 {
             questionNumber += 1
         } else {
             questionNumber = 0
+            score = 0
         }
-        
-        Timer.scheduledTimer(timeInterval: 0.2, target:self, selector: #selector(updateUI), userInfo: nil, repeats: false)
     }
-    
-    @objc func updateUI() {
-        questionText.text = quiz[questionNumber].text
-        trueButton.backgroundColor = UIColor.clear
-        falseButon.backgroundColor = UIColor.clear
-        progressBar.progress = Float(questionNumber + 1) / Float(quiz.count)
-    }
-    
-//    func gameOver() {
-//        questionText.text = "Game Over!"
-//    }
 }
